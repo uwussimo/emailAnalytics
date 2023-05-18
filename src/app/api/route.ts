@@ -16,10 +16,10 @@ export async function GET(request: Request) {
 
   const data = await address.json();
 
-  const location = `*${data.city}, ${data.regionName}, ${data.country}*`;
+  const location = `*${data.city}, ${data.regionName}, ${data.country}* \n\n*ISP:* ${data.isp}\n\n*ORG:* ${data.org}\n\n*AS:* ${data.as}\n\n*ZIP:* ${data.zip}\n\n*Timezone:* ${data.timezone}`;
   const message = `Email *${id}* has been read by \n\n${request.headers.get(
     'user-agent'
-  )},\n\nIP:${request.headers.get('x-real-ip')} \n\nLocation: ${location}`;
+  )},\n\n*IP:* ${request.headers.get('x-real-ip')} \n\nLocation: ${location}`;
 
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
