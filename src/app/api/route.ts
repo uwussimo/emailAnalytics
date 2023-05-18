@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   const location = `*${data.city}, ${data.regionName}, ${data.country}* \n\n*ISP:* ${data.isp}\n\n*ORG:* ${data.org}\n\n*AS:* ${data.as}\n\n*ZIP:* ${data.zip}\n\n*Timezone:* ${data.timezone}`;
   const message = `Email *${id}* has been read by \n\n${request.headers.get(
     'user-agent'
-  )},\n\n*IP:* ${request.headers.get('x-real-ip')} \n\nLocation: ${location}`;
+  )},\n\n*IP:* ${request.headers.get('x-real-ip')}`;
 
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
@@ -38,6 +38,16 @@ export async function GET(request: Request) {
       chat_id: sendTo,
       latitude: data.lat,
       longitude: data.lon,
+    }),
+  });
+
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: sendTo,
+      text: location,
+      parse_mode: 'Markdown',
     }),
   });
 
