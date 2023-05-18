@@ -2,9 +2,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 
-  const message = `Email ${id} has been read by ${request.headers.get(
+  const message = `Email *${id}* has been read by \n${request.headers.get(
     'user-agent'
-  )}, ${request.headers.get('x-real-ip')}`;
+  )},\nIP:${request.headers.get('x-real-ip')}`;
 
   // send telegram message
   const sendTo = 701469970; // your telegram id
@@ -13,7 +13,11 @@ export async function GET(request: Request) {
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: sendTo, text: message }),
+    body: JSON.stringify({
+      chat_id: sendTo,
+      text: message,
+      parse_mode: 'Markdown',
+    }),
   });
 
   //return image
