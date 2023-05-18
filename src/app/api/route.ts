@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
   const data = await address.json();
 
-  const location = `*${data.city}, ${data.regionName}, ${data.country}* \n\n*ISP:* ${data.isp}\n\n*ORG:* ${data.org}\n\n*AS:* ${data.as}\n\n*ZIP:* ${data.zip}\n\n*Timezone:* ${data.timezone}`;
+  const location = `*${data.city}, ${data.regionName}, ${data.country}* \n\n*ISP:* ${data.isp}\n\n*ZIP:* ${data.zip}`;
   const message = `Email *${id}* has been read by \n\n${request.headers.get(
     'user-agent'
   )},\n\n*IP:* ${request.headers.get('x-real-ip')}`;
