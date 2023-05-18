@@ -2,23 +2,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 
-  const message = `Email *${id}* has been read by \n${request.headers.get(
-    'user-agent'
-  )},\nIP:${request.headers.get('x-real-ip')}`;
-
   // send telegram message
   const sendTo = 701469970; // your telegram id
   const token = process.env.TELEGRAM_TOKEN;
-
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: sendTo,
-      text: message,
-      parse_mode: 'Markdown',
-    }),
-  });
 
   const ipAddress = request.headers.get('x-real-ip');
   const url = `http://ip-api.com/json/${ipAddress}`;
@@ -30,7 +16,20 @@ export async function GET(request: Request) {
 
   const data = await address.json();
 
-  // const location = `*${data.city}, ${data.regionName}, ${data.country}*`;
+  const location = `*${data.city}, ${data.regionName}, ${data.country}*`;
+  const message = `Email *${id}* has been read by \n\n${request.headers.get(
+    'user-agent'
+  )},\n\nIP:${request.headers.get('x-real-ip')} \n\nLocation: ${location}`;
+
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: sendTo,
+      text: message,
+      parse_mode: 'Markdown',
+    }),
+  });
 
   await fetch(`https://api.telegram.org/bot${token}/sendLocation`, {
     method: 'POST',
